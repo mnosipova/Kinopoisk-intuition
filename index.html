@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0a0c">
+<title>Угадай рейтинг — Киноинтуиция</title>
+<meta name="description" content="Насколько хорошо ты чувствуешь Кинопоиск? Угадывай рейтинги сериалов и набирай баллы.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23ff5500'/%3E%3Ctext x='50' y='72' font-size='58' text-anchor='middle' fill='%23fff' font-family='Arial' font-weight='bold'%3E★%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===== ГЛАВНЫЙ ЭКРАН ===== -->
+  <section id="screen-home" class="screen active">
+    <div class="home-wrap">
+      <div class="home-logo">
+        <span class="home-star">★</span>
+      </div>
+      <h1 class="home-title">УГАДАЙ<br>РЕЙТИНГ</h1>
+      <p class="home-subtitle">Насколько хорошо ты чувствуешь Кинопоиск?</p>
+      <div class="home-rules">
+        <p>Перед тобой <b>10 сериалов</b>.</p>
+        <p>Угадывай их рейтинг на Кинопоиске с помощью бегунка.</p>
+        <p>Чем ближе твой ответ к реальному рейтингу — тем больше баллов.</p>
+      </div>
+      <button id="btn-start" class="btn-primary btn-home">НАЧАТЬ ИГРУ</button>
+      <p class="home-footer">10 раундов · до 10 000 баллов</p>
+    </div>
+  </section>
+
+  <!-- ===== ЭКРАН ИГРЫ ===== -->
+  <section id="screen-game" class="screen">
+    <header class="game-header">
+      <div class="progress-row">
+        <span id="round-label" class="round-label">Раунд 1 из 10</span>
+        <span id="score-mini" class="score-mini">0</span>
+      </div>
+      <div id="progress-bar" class="progress-bar" aria-hidden="true"></div>
+    </header>
+
+    <div class="card" id="card">
+      <div class="poster-box">
+        <img id="poster" class="poster" src="" alt="Обложка сериала">
+        <div class="poster-shade"></div>
+        <h2 id="s-title" class="s-title"></h2>
+      </div>
+      <div class="card-body">
+        <p class="s-meta">
+          <span id="s-years"></span>
+          <span id="s-genre" class="s-genre"></span>
+        </p>
+        <p id="s-director" class="s-director"></p>
+        <p id="s-actors" class="s-actors"></p>
+      </div>
+    </div>
+
+    <div class="guess-block">
+      <h3 class="guess-question">Какой рейтинг у этого сериала на Кинопоиске?</h3>
+      <div id="guess-value" class="guess-value">8.0</div>
+      <input id="slider" class="slider" type="range" min="7" max="10" step="0.1" value="8" aria-label="Выбор рейтинга">
+      <div class="slider-scale"><span>7.0</span><span>8.5</span><span>10.0</span></div>
+      <button id="btn-guess" class="btn-primary btn-guess">УГАДАТЬ</button>
+    </div>
+
+    <!-- Результат раунда (скрыт до ответа) -->
+    <div id="result" class="result" hidden>
+      <div class="result-messages">
+        <div id="msg-emotion" class="msg-emotion"></div>
+        <div class="result-row">
+          <div class="rr rr-real">
+            <span class="rr-label">Рейтинг Кинопоиска</span>
+            <span id="real-rating" class="rr-value real-pop"></span>
+          </div>
+          <div class="rr">
+            <span class="rr-label">Ты поставил</span>
+            <span id="user-rating" class="rr-value"></span>
+          </div>
+        </div>
+        <div class="result-row">
+          <div class="rr">
+            <span class="rr-label">Разница</span>
+            <span id="diff-value" class="rr-value diff"></span>
+          </div>
+          <div class="rr rr-points">
+            <span class="rr-label">Баллы</span>
+            <span id="points-value" class="rr-value points-pop">+0</span>
+          </div>
+        </div>
+        <p id="verdict" class="verdict"></p>
+        <p id="round-score-line" class="round-score-line">Счёт за игру: <b id="total-so-far">0</b></p>
+      </div>
+      <button id="btn-next" class="btn-primary btn-next">СЛЕДУЮЩИЙ СЕРИАЛ →</button>
+    </div>
+  </section>
+
+  <!-- ===== ИТОГОВЫЙ ЭКРАН ===== -->
+  <section id="screen-final" class="screen">
+    <div class="final-wrap">
+      <p class="final-label">Твой результат</p>
+      <div class="final-score"><span id="final-points">0</span><span class="final-max">/ 10 000</span></div>
+      <div class="final-intuition">
+        Твоя киноинтуиция: <b id="final-percent">0%</b>
+      </div>
+      <div class="final-percent-bar"><div id="final-percent-fill" class="final-percent-fill"></div></div>
+
+      <div id="type-box" class="type-box">
+        <div id="type-name" class="type-name"></div>
+        <p id="type-desc" class="type-desc"></p>
+        <p id="type-stat" class="type-stat"></p>
+      </div>
+
+      <h3 class="final-h3">Твоя статистика</h3>
+      <ul class="stat-list">
+        <li><span>🎯 Средняя ошибка</span><b id="st-avg">—</b></li>
+        <li><span>⬆️ Переоценил</span><b id="st-over">—</b></li>
+        <li><span>⬇️ Недооценил</span><b id="st-under">—</b></li>
+        <li><span>🏆 Лучший ответ</span><b id="st-best">—</b></li>
+        <li><span>📉 Худший ответ</span><b id="st-worst">—</b></li>
+      </ul>
+
+      <h3 class="final-h3">По раундам</h3>
+      <div id="rounds-chart" class="rounds-chart"></div>
+
+      <button id="btn-again" class="btn-primary btn-again">ИГРАТЬ СНОВА</button>
+    </div>
+  </section>
+
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
